@@ -5,8 +5,12 @@
  * @format
  * @flow
  */
+//import {TextInput} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import {FlatList} from 'react-native';
-//import Constants from 'expo-constants';
+import {Avatar} from 'react-native-paper';
+//import { Button } from 'react-native-material-ui';
+import {Button} from 'react-native-paper';
 import {Component} from 'react';
 import React from 'react';
 import {
@@ -26,80 +30,105 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-function Item({title, code, city}) {
+function Item({city, title, temperature, sunset, sunrise, pressure}) {
   return (
     <View style={styles.item}>
       <Text style={styles.title}>{city}</Text>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.title}>{code} C</Text>
+      <Avatar.Icon size={90} backgroundColor="#4d2c91" icon="cloud-outline" />
+      <Text style={styles.title}>Temperatura {temperature} </Text>
+      <Text style={styles.title}>Sunset {sunset}</Text>
+      <Text style={styles.title}>Sunrise {sunrise} </Text>
+      <Text style={styles.title}>pressure {pressure} </Text>
     </View>
   );
 }
 
 export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [
-        {
-          id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-          title: 'First Item',
-          code: '23',
-        },
-        {
-          id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-          title: 'Second Item',
-          code: '23',
-        },
-        {
-          id: '58694a0f-3da1-471f-bd96-145571e29d72',
-          title: 'Third Item',
-          code: '23',
-        },
-      ],
-      api: null,
-      temp: null,
-    };
-  }
+  state = {
+    api: null,
+    temp: '',
+    text: '', //nazwa wyszukiwania miasta
+    city: null, //tu temperatura w mieście
+    sunset: null,
+    sunrise: null,
+    pressure: null,
+  };
 
-  componentDidMount() {
-    return fetch(
-      'http://api.openweathermap.org/data/2.5/weather?q=London&appid=',
-    )
+  // componentDidMount() {
+  //   return fetch(
+  //     'http://api.openweathermap.org/data/2.5/weather?q=London&appid=ff0db0006282fd4c77c1d69aec442ec1',
+  //   )
+  //     .then(response => response.json())
+  //     .then(responseData => {
+  //       this.setState({api: responseData});
+  //       this.setState({city: this.state.api.main.temp});
+  //     })
+  //     .catch(error => this.setState({error}));
+  // }
+
+  displayCity = () => {
+    //  const y = 'napis';
+    //  this.state.city == y;
+    const url =
+      'http://api.openweathermap.org/data/2.5/weather?q=London&appid=ff0db0006282fd4c77c1d69aec442ec1';
+    let link = url.replace('London', this.state.text);
+    return fetch(link)
       .then(response => response.json())
       .then(responseData => {
         this.setState({api: responseData});
-        this.setState({temp: this.state.api.main.temp});
+        let lol = -273.15;
+        lol += parseFloat(this.state.api.main.temp);
+
+        this.setState({city: Math.round(lol)});
+        this.setState({sunset: this.state.api.sys.sunset});
+        this.setState({sunrise: this.state.api.sys.sunrise});
+        this.setState({pressure: this.state.api.main.pressure});
       })
       .catch(error => this.setState({error}));
-  }
-
+  };
+  //273.15
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>{this.state.temp}</Text>
-        <FlatList
-          data={this.state.data}
-          renderItem={({item}) => (
-            <Item title={item.title} code={item.code} city="cos" />
-          )}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
+      <>
+        <SafeAreaView style={styles.container}>
+          <TextInput
+            label="City"
+            value={this.state.text}
+            onChangeText={text => this.setState({text})}
+          />
+          <Button
+            onPress={this.displayCity}
+            icon="arrow-right-box"
+            mode="contained"
+            color="#4d2c91">
+            Search
+          </Button>
+
+          <Item
+            city={this.state.text}
+            title="info"
+            temperature={this.state.city}
+            sunrise={this.state.sunrise}
+            sunset={this.state.sunset}
+            pressure={this.state.pressure}
+          />
+        </SafeAreaView>
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: '#757575',
+    backgroundColor: '#fafafa',
   },
   engine: {
     position: 'absolute',
     right: 0,
   },
   body: {
-    backgroundColor: '#757575',
+    backgroundColor: '#fafafa',
   },
   sectionContainer: {
     marginTop: 32,
@@ -130,15 +159,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: '#757575',
+    backgroundColor: '#fafafa',
   },
   item: {
-    backgroundColor: '#a4a4a4',
+    backgroundColor: '#4d2c91',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderRadius: 20,
   },
   title: {
     fontSize: 32,
+    color: '#fafafa',
   },
 });
