@@ -5,114 +5,63 @@
  * @format
  * @flow
  */
-//import {TextInput} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {FlatList} from 'react-native';
-import {Avatar} from 'react-native-paper';
-//import { Button } from 'react-native-material-ui';
+import md5 from 'md5';
 import {Button} from 'react-native-paper';
 import {Component} from 'react';
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-function Item({city, title, temperature, sunset, sunrise, pressure}) {
+function Item({wynik}) {
   return (
     <View style={styles.item}>
-      <Text style={styles.title}>{city}</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Avatar.Icon size={90} backgroundColor="#4d2c91" icon="cloud-outline" />
-      <Text style={styles.title}>Temperatura {temperature} </Text>
-      <Text style={styles.title}>Sunset {sunset}</Text>
-      <Text style={styles.title}>Sunrise {sunrise} </Text>
-      <Text style={styles.title}>pressure {pressure} </Text>
+      <Text style={styles.title}>{wynik}</Text>
     </View>
   );
 }
 
 export default class App extends Component {
   state = {
-    api: null,
-    temp: '',
-    text: '', //nazwa wyszukiwania miasta
-    city: null, //tu temperatura w mieście
-    sunset: null,
-    sunrise: null,
-    pressure: null,
+    nazwisko: '',
+    imie: '',
+    wynik: '',
   };
 
-  // componentDidMount() {
-  //   return fetch(
-  //     'http://api.openweathermap.org/data/2.5/weather?q=London&appid=ff0db0006282fd4c77c1d69aec442ec1',
-  //   )
-  //     .then(response => response.json())
-  //     .then(responseData => {
-  //       this.setState({api: responseData});
-  //       this.setState({city: this.state.api.main.temp});
-  //     })
-  //     .catch(error => this.setState({error}));
-  // }
+  displayResult = () => {
+    const md = md5(`${this.state.nazwisko} ${this.state.imie}`);
+    const url = `http://sroczynski.pl/iosexamrest/examresult/${md}`;
 
-  displayCity = () => {
-    //  const y = 'napis';
-    //  this.state.city == y;
-    const url =
-      'http://api.openweathermap.org/data/2.5/weather?q=London&appid=ff0db0006282fd4c77c1d69aec442ec1';
-    let link = url.replace('London', this.state.text);
-    return fetch(link)
+    return fetch(url)
       .then(response => response.json())
       .then(responseData => {
-        this.setState({api: responseData});
-        let lol = -273.15;
-        lol += parseFloat(this.state.api.main.temp);
-
-        this.setState({city: Math.round(lol)});
-        this.setState({sunset: this.state.api.sys.sunset});
-        this.setState({sunrise: this.state.api.sys.sunrise});
-        this.setState({pressure: this.state.api.main.pressure});
+        console.log(responseData);
+        console.log(responseData.result);
+        this.setState({wynik: responseData.result});
       })
       .catch(error => this.setState({error}));
   };
-  //273.15
+
   render() {
     return (
       <>
         <SafeAreaView style={styles.container}>
           <TextInput
-            label="City"
-            value={this.state.text}
-            onChangeText={text => this.setState({text})}
+            label="Nazwisko"
+            value={this.state.nazwisko}
+            onChangeText={nazwisko => this.setState({nazwisko})}
           />
-          <Button
-            onPress={this.displayCity}
-            icon="arrow-right-box"
-            mode="contained"
-            color="#4d2c91">
+          <TextInput
+            label="Imię"
+            value={this.state.imie}
+            onChangeText={imie => this.setState({imie})}
+          />
+          <Button onPress={this.displayResult} mode="contained" color="#4d2c91">
             Search
           </Button>
 
-          <Item
-            city={this.state.text}
-            title="info"
-            temperature={this.state.city}
-            sunrise={this.state.sunrise}
-            sunset={this.state.sunset}
-            pressure={this.state.pressure}
-          />
+          <Item wynik={this.state.wynik} />
         </SafeAreaView>
       </>
     );
