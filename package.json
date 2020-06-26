@@ -1,5 +1,5 @@
 {
-  "name": "IOS-Egzamin",
+  "name": "iosegzamin",
   "version": "0.0.1",
   "private": true,
   "author": "Wojciech Kuśmierz",
@@ -10,7 +10,7 @@
     "test": "jest",
     "lint": "eslint ."
   },
-  "dependencies": {g
+  "dependencies": {
     "md5": "^2.2.1",
     "react": "16.9.0",
     "react-native": "0.61.5",

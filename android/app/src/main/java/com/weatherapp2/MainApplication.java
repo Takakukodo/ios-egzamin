@@ -1,4 +1,4 @@
-package com.weatherapp2;
+package com.iosegzamin;
 
 import android.app.Application;
 import android.content.Context;

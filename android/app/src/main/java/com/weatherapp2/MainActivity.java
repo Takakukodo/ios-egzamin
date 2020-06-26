@@ -1,4 +1,4 @@
-package com.weatherapp2;
+package com.iosegzamin;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "WeatherAPP2";
+    return "iosegzamin";
   }
 }
