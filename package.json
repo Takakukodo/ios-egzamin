@@ -1,7 +1,8 @@
 {
-  "name": "WeatherAPP2",
+  "name": "IOS-Egzamin",
   "version": "0.0.1",
   "private": true,
+  "author": "Wojciech Kuśmierz",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -9,7 +10,7 @@
     "test": "jest",
     "lint": "eslint ."
   },
-  "dependencies": {
+  "dependencies": {g
     "md5": "^2.2.1",
     "react": "16.9.0",
     "react-native": "0.61.5",

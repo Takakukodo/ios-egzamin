@@ -5,6 +5,9 @@
  * @format
  * @flow
  */
+
+//autor: wojciech kuśmierz
+
 import {TextInput} from 'react-native-paper';
 import md5 from 'md5';
 import {Button} from 'react-native-paper';
